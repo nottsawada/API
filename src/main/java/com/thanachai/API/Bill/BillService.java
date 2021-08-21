@@ -2,7 +2,6 @@ package com.thanachai.API.Bill;
 
 
 
-import exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,26 +24,26 @@ public class BillService {
         return billRepository.findAll();
     }
 
-    public void addNewBill(Bill bill) {
+    public AddOrderReponse addNewBill(Bill bill) {
         Optional<Bill> billOptional = billRepository
-        .findBillByName(bill.getName());
+                .findBillByName(bill.getName());
         if (billOptional.isPresent()){
-            throw new IllegalStateException("Cannot Insert Bill");
+            return new AddOrderReponse("0","ไม่สำเร็จ");
         }
 
         billRepository.save(bill);
-        throw new ApiRequestException("Insert Bill Success");
+        return new AddOrderReponse("1","เพิ่มรายการสำเร็จ  ! success");
     }
 
-    public void deleteBill(Long order_id) {
-       // billRepository.findById(order_id);
+    public DeleteOrderResponse deleteBill(Long order_id) {
+        billRepository.findById(order_id);
         boolean exists = billRepository.existsById(order_id);
         if (!exists){
             throw new IllegalStateException(
                     "bill with order_id" + order_id +" does not exists ");
         }
         billRepository.deleteById(order_id);
-        throw new ApiRequestException("Delete Success");
+        throw  new IllegalStateException("Delete " + order_id+ " Success");
     }
     @Transactional
     public  void updateBill(Long order_id,
@@ -120,4 +119,6 @@ public class BillService {
             bill.setFee(fee);
         }
     }
+
+
 }

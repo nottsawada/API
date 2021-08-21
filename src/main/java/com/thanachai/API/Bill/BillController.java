@@ -1,10 +1,13 @@
 package com.thanachai.API.Bill;
 
-//import exception.ApiRequestException;
 import exception.ApiRequestException;
+//import exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,22 +23,34 @@ public class BillController {
         this.billService = billService;
     }
 
+
     @GetMapping
-  public List<Bill> getBills(){
-      // throw new ApiRequestException("Cannot get all bill");
-       return billService.getBills();
+    public List<Bill> getBills() {
+       // throw new ApiRequestException("Cannot get all bill");
+        return billService.getBills();
     }
 
-    @PostMapping
-    public void registerNewBill(@RequestBody Bill bill){
-        billService.addNewBill(bill);
+   // @PostMapping
+   // public void registerNewBill(@RequestBody Bill bill){
+     //   billService.addNewBill(bill);
 
+   // }
+
+    @RequestMapping(value = "/addorder", method = RequestMethod.POST)
+    public void registerNewBill(@RequestBody Bill bill) {
+      // AddOrderReponse body =  billService.addNewBill(bill);
+      // HttpHeaders headers =new  HttpHeaders();
+         ResponseEntity.ok(billService.addNewBill(bill)).getBody().getDescription();
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{order_id}")
     public void deleteBill(
             @PathVariable("order_id") Long order_id){
         billService.deleteBill(order_id);
+        {
+            throw new ApiRequestException(order_id);
+        }
     }
 
     @PutMapping(path = "{order_id}")
