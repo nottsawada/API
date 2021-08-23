@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table
-public class Bill {
+public class DataBill {
 
     @Id
     @SequenceGenerator(
@@ -29,15 +29,15 @@ public class Bill {
     private String slip;
     private String status;
 
-    public Bill(){
+    public DataBill(){
 
     }
 
-    public Bill(Long order_id, String time_stamp,
-                String name, String address, String tel,
-                String service_id, String money_card,
-                Integer amount, Integer fee, Integer total,
-                String slip, String status) {
+    public DataBill(Long order_id, String time_stamp,
+                    String name, String address, String tel,
+                    String service_id, String money_card,
+                    Integer amount, Integer fee, Integer total,
+                    String slip, String status) {
         this.order_id = order_id;
         this.time_stamp = time_stamp;
         this.name = name;
@@ -52,8 +52,8 @@ public class Bill {
         this.status = status;
     }
 
-    public Bill(String time_stamp, String name, String address, String tel, String service_id, String money_card,
-                Integer amount, Integer fee, Integer total, String slip, String status) {
+    public DataBill(String time_stamp, String name, String address, String tel, String service_id, String money_card,
+                    Integer amount, Integer fee, Integer total, String slip, String status) {
         this.time_stamp = time_stamp;
         this.name = name;
         this.address = address;

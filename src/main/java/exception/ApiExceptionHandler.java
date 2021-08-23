@@ -1,6 +1,6 @@
 package exception;
 
-import com.thanachai.API.Bill.Bill;
+import com.thanachai.API.Bill.DataBill;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,14 +10,23 @@ import java.time.ZonedDateTime;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
-   // @RequestBody
+    public ApiExceptionHandler() {
+
+    }
+//  @ExceptionHandler
+//  @ResponseStatus(HttpStatus.NOT_FOUND)
+//    String ApiRequestException(ApiRequestException ex){
+//        return ex.getMessage();
+//    }
+    @ResponseBody
     @ExceptionHandler(value = {ApiRequestException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
      String ApiRequestException (ApiRequestException ex){
+
         return ex.getMessage();
     }
 
-    public ResponseEntity<Bill> handleApiRequestException(ApiRequestException e){
+    public ResponseEntity<DataBill> handleApiRequestException(ApiRequestException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
 
         ApiException apiException = new ApiException(
@@ -27,4 +36,5 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity(apiException, badRequest);
     }
-}
+
+       }

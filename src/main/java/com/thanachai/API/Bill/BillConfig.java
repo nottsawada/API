@@ -1,6 +1,5 @@
 package com.thanachai.API.Bill;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,7 @@ public class BillConfig {
     CommandLineRunner commandLineRunner(
             BillRepository repository){
         return args -> {
-            Bill ohm = new Bill(
+            DataBill ohm = new DataBill(
                     "27",
                     "ohm",
                     "43/3",
@@ -26,7 +25,7 @@ public class BillConfig {
                     "slip",
                     "1"
             );
-            Bill eye = new Bill(
+            DataBill eye = new DataBill(
                     "25",
                     "eye",
                     "57/1",

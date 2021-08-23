@@ -2,6 +2,7 @@ package com.thanachai.API.Bill;
 
 
 
+import exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,104 +21,112 @@ public class BillService {
 
         this.billRepository = billRepository;
     }
-    public List<Bill> getBills(){
+    public List<DataBill> getBills(){
+
         return billRepository.findAll();
     }
 
-    public AddOrderReponse addNewBill(Bill bill) {
-        Optional<Bill> billOptional = billRepository
-                .findBillByName(bill.getName());
+//    public void addNewBill(Bill bIll){
+//        Optional<Bill> billByName = billRepository
+//                .findBillByName(bIll.getName());
+//        if (billOptional.isPresent()){
+//            return new AddOrderReponse("0","เพิ่มรายการไม่สำเร็จ");
+//        }
+//        billRepository.save(bill)
+//        return new AddOrderReponse("1","เพิ่มรายการสำเร็จ  ! success");
+//    }
+    public AddOrderReponse addNewBill(DataBill dataBill) {
+        Optional<DataBill> billOptional = billRepository
+                .findBillByName(dataBill.getName());
         if (billOptional.isPresent()){
-            return new AddOrderReponse("0","ไม่สำเร็จ");
+            return new AddOrderReponse("0","เพิ่มรายการไม่สำเร็จ ! ");
         }
 
-        billRepository.save(bill);
+        billRepository.save(dataBill);
         return new AddOrderReponse("1","เพิ่มรายการสำเร็จ  ! success");
     }
 
-    public DeleteOrderResponse deleteBill(Long order_id) {
+//    public void deleteBill(Long order_id){
+//        billRepository.findById(order_id);
+//        boolean exists = billRepository.existsById(order_id);
+//               }
+//    }
+
+    public AddOrderReponse deleteBill(Long order_id) {
         billRepository.findById(order_id);
         boolean exists = billRepository.existsById(order_id);
         if (!exists){
-            throw new IllegalStateException(
-                    "bill with order_id" + order_id +" does not exists ");
+            return new AddOrderReponse("0","bill with order_id" + order_id +" does not exists ");
         }
         billRepository.deleteById(order_id);
-        throw  new IllegalStateException("Delete " + order_id+ " Success");
+        return new AddOrderReponse("1","ลบรายการสำเร็จ  ! order deleted ");
     }
     @Transactional
-    public  void updateBill(Long order_id,
-                            String name,
-                            String tel,
-                            String address,
-                            String service_id,
-                            String money_card,
-                            Integer amount,
-                            Integer fee,
-                            Integer total,
-                            String slip,
-                            String status) {
-        Bill bill = billRepository.findById(order_id).orElseThrow(() -> new IllegalStateException(
-                "bill with order_id" + order_id + "does not exist"));
-        if (name != null &&
-                name.length() > 0 &&
-                !Objects.equals(bill.getName(), name)) {
-            bill.setName(name);
+    public  AddOrderReponse updateBill(DataBill putDataBill) {
+        DataBill dataBill = billRepository.findById(putDataBill.getOrder_id()).orElseThrow(() -> new IllegalStateException(
+                "bill with order_id" + putDataBill.getOrder_id() + "does not exist"));
+        if (putDataBill.getName() != null &&
+                putDataBill.getName().length() > 0 &&
+                !Objects.equals(dataBill.getName(), putDataBill.getName())) {
+            dataBill.setName(putDataBill.getName());
         }
-        if (tel != null &&
-                tel.length() > 0 &&
-                !Objects.equals(bill.getTel(), tel)) {
-            Optional<Bill> billOptional = billRepository.findBillByName(name);
+        if (putDataBill.getTel() != null &&
+                putDataBill.getTel().length() > 0 &&
+                !Objects.equals(dataBill.getTel(), putDataBill.getTel())) {
+            Optional<DataBill> billOptional = billRepository.findBillByName(putDataBill.getName());
             if (billOptional.isPresent()) {
-                throw new IllegalStateException("tel taken");
+                return new AddOrderReponse("0","เบอร์ไม่ถูกต้อง");
             }
-            bill.setTel(tel);
+            dataBill.setTel(putDataBill.getTel());
         }
-        if (address != null &&
-                address.length() > 0 &&
-                !Objects.equals(bill.getAddress(), address)) {
-            Optional<Bill> billOptional = billRepository.findBillByName(name);
+        if (putDataBill.getAddress() != null &&
+                putDataBill.getAddress().length() > 0 &&
+                !Objects.equals(dataBill.getAddress(), putDataBill.getAddress())) {
+            Optional<DataBill> billOptional = billRepository.findBillByName(putDataBill.getName());
             if (billOptional.isPresent()) {
-                throw new IllegalStateException("Address taken");
+                return new AddOrderReponse("0","ที่อยู่ไม่ถูกต้อง");
             }
-            bill.setAddress(address);
+            dataBill.setAddress(putDataBill.getAddress());
         }
-        if (service_id != null &&
-                service_id.length() > 0 &&
-                !Objects.equals(bill.getService_id(), service_id)) {
-            Optional<Bill> billOptional = billRepository.findBillByName(name);
+        if (putDataBill.getService_id() != null &&
+                putDataBill.getService_id().length() > 0 &&
+                !Objects.equals(dataBill.getService_id(), putDataBill.getService_id())) {
+            Optional<DataBill> billOptional = billRepository.findBillByName(putDataBill.getName());
             if (billOptional.isPresent()) {
-                throw new IllegalStateException("Service_id taken");
+                return new AddOrderReponse("0","เลขบัญชีไม่ถูกต้อง");
             }
-            bill.setService_id(service_id);
+            dataBill.setService_id(putDataBill.getService_id());
         }
-        if (money_card != null &&
-                money_card.length() > 0 &&
-                !Objects.equals(bill.getMoney_card(), money_card)) {
-            Optional<Bill> billOptional = billRepository.findBillByName(name);
+        if (putDataBill.getMoney_card() != null &&
+                putDataBill.getMoney_card().length() > 0 &&
+                !Objects.equals(dataBill.getMoney_card(), putDataBill.getMoney_card())) {
+            Optional<DataBill> billOptional = billRepository.findBillByName(putDataBill.getName());
             if (billOptional.isPresent()) {
-                throw new IllegalStateException("money_card taken");
+                return new AddOrderReponse("0","ธนาคารไม่ถูกต้อง");
             }
-            bill.setMoney_card(money_card);
+            dataBill.setMoney_card(putDataBill.getMoney_card());
         }
-        if (amount != null &&
-                amount.intValue() > 0 &&
-                !Objects.equals(bill.getAmount(), amount)) {
-            Optional<Bill> billOptional = billRepository.findBillByName(name);
+        if (putDataBill.getAmount() != null &&
+                putDataBill.getAmount().intValue() > 0 &&
+                !Objects.equals(dataBill.getAmount(), putDataBill.getAmount())) {
+            Optional<DataBill> billOptional = billRepository.findBillByName(putDataBill.getName());
             if (billOptional.isPresent()) {
-                throw new IllegalStateException("amount taken");
+                return new AddOrderReponse("0","จำนวนเงินไม่ถูกต้อง");
             }
-            bill.setAmount(amount);
+            dataBill.setAmount(putDataBill.getAmount());
         }
-        if (fee != null &&
-                fee.intValue() > 0 &&
-                !Objects.equals(bill.getFee(), fee)) {
-            Optional<Bill> billOptional = billRepository.findBillByName(name);
+        if (putDataBill.getFee() != null &&
+                putDataBill.getFee().intValue() > 0 &&
+                !Objects.equals(dataBill.getFee(), putDataBill.getFee())) {
+            Optional<DataBill> billOptional = billRepository.findBillByName(putDataBill.getName());
             if (billOptional.isPresent()) {
-                throw new IllegalStateException("fee taken");
+                return new AddOrderReponse("0","ค่าธรรมเนียมไม่ถูกต้อง");
             }
-            bill.setFee(fee);
+            dataBill.setFee(putDataBill.getFee());
         }
+
+
+        return new AddOrderReponse("1","แก้ไขสำเร็จ");
     }
 
 

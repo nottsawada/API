@@ -1,6 +1,10 @@
 package com.thanachai.API.Bill;
 
-public class AddOrderReponse {
+import exception.ApiRequestException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+public class AddOrderReponse<เพิ่มรายการสำเร็จ, success> {
     private String status;
     private String description;
 
@@ -24,8 +28,17 @@ public class AddOrderReponse {
     public void setDescription(String description) {
         this.description = description;
     }
-    @Override
-    public String toString(){
-        return "Status ="+status+",Description ="+description+"";
+
+    {
+
     }
-}
+
+    @Override
+    public String toString() {
+        return "AddOrderReponse{" +
+                "status='" + status + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+    }
+
